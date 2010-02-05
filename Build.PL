@@ -1,23 +1,28 @@
-
 use Module::Build;
+use strict;
+use warnings;
+
+my %requires = (
+                 'perl'                     => '5.004',
+                 'Sort::DataTypes'          => '0',
+               );
+my %build_mods = (
+                 'Storable'                 => '0',
+                 'Test::More'               => '0',
+                 'Test::Pod'                => '0',
+                 'Test::Pod::Coverage'      => '0',
+               );
+
 
 my $build = Module::Build->new(
         license            => 'perl',
-        dist_version       => '1.00',
+        dist_version       => '1.01',
         dist_author        => 'Sullivan Beck <sbeck@cpan.org>',
         module_name        => 'Set::ArrayAlt',
-        dist_abstract      => 'arrays as objects with list/set operations',
-        requires           => {
-                'perl'                => '5.6.0',
-                'Sort::DataTypes'     => '0',
-        },
-        build_requires     => {
-        },
-        build_recommends   => {
-                'Test::More'          => '0',
-                'Test::Pod'           => '0',
-                'Test::Pod::Coverage' => '0',
-        },
+        dist_abstract      => 'full set of list/set operations for arrays',
+        requires           => \%requires,
+        build_requires     => {},
+        build_recommends   => \%build_mods,
         sign               => 1,
 );
 

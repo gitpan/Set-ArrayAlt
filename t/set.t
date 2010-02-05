@@ -5,10 +5,12 @@ require 5.001;
 $runtests=shift(@ARGV);
 if ( -f "t/test.pl" ) {
   require "t/test.pl";
-  $dir="t";
+  $dir="./lib";
+  $tdir="t";
 } elsif ( -f "test.pl" ) {
   require "test.pl";
-  $dir=".";
+  $dir="../lib";
+  $tdir=".";
 } else {
   die "ERROR: cannot find test.pl\n";
 }
@@ -34,6 +36,10 @@ sub test {
      $ret = $obj1->is_equal($obj2,@test);
   } elsif ($op eq "not_equal") {
      $ret = $obj1->not_equal($obj2,@test);
+  } elsif ($op eq "is_subset") {
+     $ret = $obj1->is_subset($obj2,@test);
+  } elsif ($op eq "not_subset") {
+     $ret = $obj1->not_subset($obj2,@test);
   }
   if (ref($ret)) {
      return $ret->list();
@@ -83,6 +89,16 @@ not_equal l6 l7 1 ~ 0
 not_equal l7 l8 ~ 0
 
 not_equal l7 l8 1 ~ 0
+
+is_subset l6 l7 0 ~ 1
+
+is_subset l6 l7 1 ~ 1
+
+is_subset l7 l6 0 ~ 0
+
+is_subset l7 l6 1 ~ 1
+
+is_subset l1 l6 0 ~ 1
 
 ";
 

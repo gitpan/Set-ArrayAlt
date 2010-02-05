@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-Set::ArrayAlt - arrays as objects with list/set operations
+Set::ArrayAlt - full set of list/set operations for arrays
 
 =head1 SYNOPSIS
 
@@ -11,8 +11,8 @@ Set::ArrayAlt - arrays as objects with list/set operations
 =head1 DESCRIPTION
 
 This module attempts to provide a complete set of set and list
-operations. It acts as a standalone module, or is available
-in Template::Toolkit templates using the companion module
+operations. It acts as a standalone module, or is available in
+Template::Toolkit templates using the companion module
 Template::Plugin::ListOps .
 
 It performs many of the same functions as the Set::Array module,
@@ -27,10 +27,22 @@ below.
 
 =item new
 
-   $obj = new Set::EndArray [@list];
+   $obj = new Set::ArrayAlt [@list];
 
-This creates a new Set::EndArray object. If @list is passed in, this
+This creates a new Set::ArrayAlt object. If @list is passed in, this
 is set to the initial set of elements.
+
+If @list is passed in, the following two are equivalent:
+
+   $obj = new Set::ArrayAlt @list;
+
+and
+
+   $obj = new Set::ArrayAlt;
+   $obj->list(@list);
+
+There is no restriction on the type of elements in @list. They can be
+scalars, references, objects, or undefs.
 
 =item version
 
@@ -64,23 +76,61 @@ and undef is returned.
 
    %hash = $obj->as_hash();
 
-This returns a hash that describes the list contained in $obj.
-Every defined value in the list is one of the keys in %hash.
-The value of %hash is the number of times that element appears
-in the list.
+This returns a hash that describes the scalars in the list contained
+in $obj. References and undef values are ignored.
+
+Every scalar in the list is one of the keys in %hash.  The value of
+%hash is the number of times that element appears in the list.
+
+   ($count,$vals) = $obj->as_hash(1);
+
+This returns two hash references that describe ALL values in the
+list, including references, objects, and undef.
+
+Every unique value in the list is assigned a label (which has no
+significance). The hash %$vals has the labels as keys and the
+actual values as values for the keys.
+
+The hash %$count has the labels as keys and the values are the
+number of times that value appears in the list.
+
+The following example should illustrate this:
+
+   $i = [1,2];
+   $j = [1,2];
+   @l = ('a', $i, 'b', $j, 'a', undef, undef, $i);
+   $o = new Set::ArrayAlt(@l);
+   ($c,$v) = $o->as_hash(1)
+      => $c = { 1 => 2,
+                2 => 2,
+                3 => 1,
+                4 => 1,
+                5 => 2 }
+         $v = { 1 => 'a',
+                2 => [1,2],
+                3 => 'b',
+                4 => [1,2],
+                5 => undef }
+
+Note that the two elements $i and $j are treated as different since
+they point to different references, even though the data is the same
+in those two lists.
 
 =item at
 
    $ele = $obj->at($n);
-
-This returns the element at position $n in the list (position
-numbering starts at 0). Negative numbers can also be used to
-count from the end.
-
    @ele = $obj->at(@n);
 
-This returns the elements at the given positions. This will return
-an error in scalar context (if @n contains more than one index).
+This returns the element at position $n in the list, or a list of the
+elements at the positions given in the list @n.
+
+In scalar context, only a single position may be passed in. In list
+context, any number of positions may be passed in.
+
+Positions follow standard perl conventions with numbering starting at
+0. Negative numbers can also be used to count from the end.  All
+positions must refer to elements in the list (i.e. you may not refer
+to the 6th element in a list containing 5 elements).
 
 =item count
 
@@ -91,12 +141,12 @@ is not given, it counts the number of undef elements in the list.
 
 =item exists
 
-   $flag = $obj->exists([$val]);
+   $flag = $obj->exists(@val);
 
-This returns 1 if the value $val exists in the list. If $val is not
+This returns 1 if every value exists in the list. If @val is not
 passed in, it tests for undef values.
 
-If $val does not exist, it returns 0.
+It returns 0 if any of the values do not exists in the list.
 
 =item first
 
@@ -105,7 +155,8 @@ If $val does not exist, it returns 0.
    $val = $obj->first();
    $val = $obj->last();
 
-These return the first or last elements of the list.
+These return the first or last elements of the list. If the list contains
+no elements, an error is set.
 
 =item index
 
@@ -121,10 +172,25 @@ In list context, these return the index of every occurrence of $val in
 the list. If $val is not passed in, the indices of all undef elements
 are returned.
 
+If the value is not found, -1 is returned in scalar context, or
+an empty list in list context.
+
 The rindex function returns them in reverse order.
 
 In scalar context, the index and rindex methods return the index of
 the first or last occurrence of $val in the list.
+
+$val can be a scalar, undef, or a reference, and all will work
+as expected. For example:
+
+   $i = [1,2];
+   $j = [1,2];
+   @l = ('a', $i, 'b', $j, 'a', undef, undef, $i);
+   $o = new Set::ArrayAlt(@l);
+   (@idx) = $o->index();
+      => @idx = (5, 6)
+   (@idx) = $o->index($i);
+      => @idx = (1)
 
 =item is_empty
 
@@ -400,6 +466,23 @@ If $unique is non-zero, the count of each type of element is
 ignored so (a,a,b) = (a,b). Otherwise, the count is important
 so (a,a,b) != (a,b).
 
+=item is_subset
+
+=item not_subset
+
+   $flag = $obj->is_subset($obj2 [,$unique]);
+   $flag = $obj->not_subset($obj2 [,$unique]);
+
+These return 1 if the list in $obj2 is a subset of the list in $obj
+(or is NOT a subset).
+
+If $unique is not passed in, every element in $obj2 must have an
+instance in $obj. So (a a b) is a subset of (a a a b c) but NOT of
+(a b c).
+
+If $unique is passed in, every element in $obj2 must exists in $obj
+but the count is unimportant, so (a a b) is a subset of (a b c).
+
 =item symmetric_difference
 
    $obj3 = $obj->symmetric_difference($obj2 [,$unique]);
@@ -416,6 +499,9 @@ all of the instances in the other list.
 For example, the symmetric difference between the two lists (a a b b
 c) and (a c) is either (a b b) or (b b). If $unique is non-zero, the
 second is used.
+
+Note that both instances of 'b' are kept because the $unique flag
+only affects elements which exist in both objects.
 
 =item union
 
@@ -490,14 +576,16 @@ Set::Array, but with a few changes. It has enhanced functionality with
 respect to duplicate elements but is missing some of the functionality
 of Set::Array (especially method chaining and operator overloading)
 which depend on the Want module.  This module is not intended to be a
-drop-in replacement for Set::Array.
+drop-in replacement for Set::Array. It is also missing a couple
+functions (join and impose) that are applicable only to all-scalar
+lists.
 
-It may be that the problems with the Want module have been corrected
-at this point, and that I could have used Set::Array, but since some
-of the functionality I needed was the enhanced duplicate element
-handling, and since creating this module from what I'd already written
-was actually a pretty easy task, I decided to go ahead with the
-creation of this module.
+It may well be that the problems with the Want module have been
+corrected at this point, and that I could have used Set::Array, but
+since some of the functionality I needed was the enhanced duplicate
+element handling, and since creating this module from what I'd already
+written was actually a pretty easy task, I decided to go ahead with
+the creation of this module.
 
 Anyway, that's the history. Hopefully, I'm justified in reinventing
 the wheel.

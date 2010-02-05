@@ -1,19 +1,19 @@
 ---
 name: Set-ArrayAlt
-version: 1.00
+version: 1.01
 author:
   - 'Sullivan Beck <sbeck@cpan.org>'
-abstract: arrays as objects with list/set operations
+abstract: full set of list/set operations for arrays
 license: perl
 resources:
   license: http://dev.perl.org/licenses/
 requires:
   Sort::DataTypes: 0
-  perl: 5.6.0
+  perl: 5.004
 provides:
   Set::ArrayAlt:
     file: lib/Set/ArrayAlt.pm
-    version: 1.00
+    version: 1.01
 generated_by: Module::Build version 0.280801
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.2.html

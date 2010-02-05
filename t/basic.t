@@ -5,10 +5,12 @@ require 5.001;
 $runtests=shift(@ARGV);
 if ( -f "t/test.pl" ) {
   require "t/test.pl";
-  $dir="t";
+  $dir="./lib";
+  $tdir="t";
 } elsif ( -f "test.pl" ) {
   require "test.pl";
-  $dir=".";
+  $dir="../lib";
+  $tdir=".";
 } else {
   die "ERROR: cannot find test.pl\n";
 }
@@ -80,9 +82,9 @@ $obj = new Set::ArrayAlt;
 
 $tests = "
 
-length ~ 1 _undef_
+length ~ 0 0
 
-list ~ 1 _undef_
+list ~ 0
 
 list a b ~ 0
 
@@ -181,6 +183,10 @@ exists ~ 0 1
 exists a ~ 0 1
 
 exists d ~ 0 0
+
+exists a b ~ 0 1
+
+exists a d ~ 0 0
 
 is_empty ~ 0 0
 
