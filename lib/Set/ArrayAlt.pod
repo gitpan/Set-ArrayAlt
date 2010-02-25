@@ -10,6 +10,14 @@ Set::ArrayAlt - full set of list/set operations for arrays
 
 =head1 DESCRIPTION
 
+*** NOTE ***
+
+This module has been renamed to Array::AsObject . Please use
+that module instead. For more information, please refer to
+the HISTORY AND RATIONALE SECTION below.
+
+*** END NOTE ***
+
 This module attempts to provide a complete set of set and list
 operations. It acts as a standalone module, or is available in
 Template::Toolkit templates using the companion module
@@ -519,7 +527,7 @@ For example, the union of the two lists (a a b) and (a c) is either
 
 =head1 HISTORY AND RATIONALE
 
-With several other modules out there that do various set and list
+With several other modules out there that do various set and array
 operations, a brief history of why I wrote this module is in order.
 
 The origin of this module came when I needed better list handling
@@ -536,10 +544,10 @@ what I wanted.
 
 Unfortunately, I discovered almost immediately that Set::Array
 suffered from a fairly serious problem. It depends on the Want
-module which had some known problems and would fail under some
-circumstances (older versions of perl if I recall correctly,
-though I could be wrong about that), and unfortunately, some
-of the places I needed my module to run failed due to those
+module which, at the time, had some known problems and would fail
+under some circumstances (older versions of perl if I recall
+correctly, though I could be wrong about that), and unfortunately,
+some of the places I needed my module to run failed due to those
 problems.
 
 I looked at the Want module, but correcting it was beyond my abiltity,
@@ -548,22 +556,22 @@ depending on Set::Array. This would also allow me to add the
 functionality that I wanted.
 
 So I did that. I rewrote each function to do the list/set operation
-I wanted instead of call Set::Array functions.
+I wanted instead of calling Set::Array functions.
 
 Almost as soon as I was done (and perhaps even before), I started
 regretting rewriting the module in that way. I should have written a
 standalone module and then had the Template::Plugin::ListOps be a
 wrapper for it instead of Set::Array... but in the interest of time, I
-didn't go back and redo it.
+didn't go back and redo it... until later.
 
-Until now.
+Later, I ran into a case where I wanted the set/list functionality
+from Template::Plugin::ListOps for another perl application. At
+that point, I decided to create the standalone module.
 
-I recently ran into a case where I wanted the set/list functionality
-from Template::Plugin::ListOps for another application.
-
-So, this module takes the routines from Template::Plugin::ListOps
-and moves them into a standalone module. Template::Plugin::ListOps
-will be rewritten to be a wrapper around this module.
+So, this module takes the routines from the original
+Template::Plugin::ListOps module and moves them into a standalone
+module. Template::Plugin::ListOps was then rewritten trivially
+to be a wrapper around this module.
 
 Some other notes:
 
@@ -571,14 +579,14 @@ Since the original version of Template::Plugin::ListOps (which was
 never released) was a wrapper around Set::Array, the naming of the
 functions is very similar, but the functionality differs slightly.
 
-This module is named Set::ArrayAlt to indicate that it is based on
-Set::Array, but with a few changes. It has enhanced functionality with
-respect to duplicate elements but is missing some of the functionality
-of Set::Array (especially method chaining and operator overloading)
-which depend on the Want module.  This module is not intended to be a
-drop-in replacement for Set::Array. It is also missing a couple
-functions (join and impose) that are applicable only to all-scalar
-lists.
+This module was initially named Set::ArrayAlt to indicate that it is
+based on Set::Array, but with a few changes. It has enhanced
+functionality with respect to duplicate elements but is missing some
+of the functionality of Set::Array (especially method chaining and
+operator overloading) which depend on the Want module.  This module
+is not intended to be a drop-in replacement for Set::Array. It is
+also missing a couple functions (join and impose) that are applicable
+only to all-scalar lists.
 
 It may well be that the problems with the Want module have been
 corrected at this point, and that I could have used Set::Array, but
@@ -589,6 +597,28 @@ the creation of this module.
 
 Anyway, that's the history. Hopefully, I'm justified in reinventing
 the wheel.
+
+After a while, I decided I wanted to register this module (which
+basically means to get it put in the official list of perl modules).
+The upside is that the module will get added publicity and use...
+the downside (if you can call it that) is that they expect the name
+of the module to accurately reflect the module.
+
+This module is more accurately thought of as a module for handling
+arrays, than as a module for handling sets. True, it does do set
+operations, but it really works on an array, doing most of the
+operations that you could want to do with an array. Included in
+those operations are a subset of functions where you treat the array
+as a set.
+
+Anyway, it was requested that I rename the module to be in the Array::
+namespace rather than the Set:: namespace (and Array::AsObject was
+suggested), so that's why it's been renamed.
+
+Versions of this module before 1.02 were released under the name
+Set::ArrayAlt. Version 1.02 was released simultaneously under the
+names Set::ArrayAlt and Array::AsObject. Versions after 1.02 will
+only be released under the name Array::AsObject.
 
 =head1 KNOWN PROBLEMS
 

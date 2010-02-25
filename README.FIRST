@@ -1,0 +1,27 @@
+After some discussion on the perl modules mailing list, I am registering
+this module under the name:
+
+   Array::AsObject
+
+The original module: Set::ArrayAlt was based on the module Set::Array,
+and the history is covered in the manual.
+
+However, although Set::Array (and Set::ArrayAlt) did set operations,
+they also did other array operations. As a result, the module was
+not really a Set:: module... it was more correctly an Array:: module
+which treated the array as a set in some of the operations.
+
+I agreed to rename the module so that it is registered under a more
+correct name.
+
+Set::ArrayAlt 1.02 is the final version of Set::ArrayAlt, and will
+likely be removed entirely eventually. Instead, use the Array::AsObject
+module.
+
+Array::AsObject 1.02 is exactly identical to Set::ArrayAlt 1.02
+(except for the name). To swich modules in your code, simply replace
+Set::ArrayAlt with Array::AsObject anywhere it appears.  No other
+changes should be required.
+
+Any bug fixes or added functionality will be made only to the
+Array::AsObject module.

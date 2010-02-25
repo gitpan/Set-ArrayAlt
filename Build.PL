@@ -16,7 +16,7 @@ my %build_mods = (
 
 my $build = Module::Build->new(
         license            => 'perl',
-        dist_version       => '1.01',
+        dist_version       => '1.02',
         dist_author        => 'Sullivan Beck <sbeck@cpan.org>',
         module_name        => 'Set::ArrayAlt',
         dist_abstract      => 'full set of list/set operations for arrays',

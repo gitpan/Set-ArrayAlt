@@ -14,7 +14,7 @@ my %requires = (
 
 WriteMakefile(
         NAME             => 'Set::ArrayAlt',
-        VERSION          => '1.01',
+        VERSION          => '1.02',
         ($] >= 5.004
         ? (ABSTRACT=>'full set of list/set operations for arrays',
            AUTHOR  =>'Sullivan Beck (sbeck@cpan.org)')

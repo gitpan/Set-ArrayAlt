@@ -8,6 +8,7 @@ LICENSE
 Makefile.PL
 MANIFEST			This list of files
 README
+README.FIRST
 t/as_hash.t
 t/at.t
 t/basic.t
